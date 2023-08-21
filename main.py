@@ -46,7 +46,33 @@ def create_student():
 
 
 def create_teacher():
-    print("Hello Teacher")
+    global user_list, user_id
+    user_id += 1
+    teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
+    teacher_surname = attribute_type_check(str, "Podaj nazwisko nauczyciela.")
+    teacher_subject = attribute_type_check(
+        str, "Podaj nazwe przedmiotu nauczanego.")
+    add_class = True
+    teacher_classes = []
+    print("Wprowadź klasy nauczyciela. Zostaw puste pole aby zastopować")
+    while add_class:
+        class_input = str(input("Klasa: "))
+        if len(class_input) == 0:
+            add_class = False
+        elif isinstance(class_input, str):
+            teacher_classes.append(class_input)
+        else:
+            class_input = bad_attribute_value(class_input)
+    user_list["T" + str(user_id)] = {
+        "Teacher": {
+            "name": teacher_name,
+            "surname": teacher_surname,
+            "subject": teacher_subject,
+            "classes": teacher_classes
+        }
+    }
+    print(user_list)
+    break_lines(10)
 
 
 def create_class_teacher():
