@@ -1,5 +1,3 @@
-
-
 # REPETITIVE FUNCTIONS
 def bad_attribute_value(attribute):
     print(
@@ -26,27 +24,27 @@ user_id = 100
 # CREATE USER
 
 
-class NewStudent:
+class Student:
     def __init__(self, name, surname, school_class):
+        global user_id
         self.name = name
         self.surname = surname
         self.school_class = school_class
+        user_id += 1
+        self.id = "S" + str(user_id)
 
 
 def create_student():
-    global user_list, user_id
+    global user_list
     student_name = attribute_type_check(str, "Podaj imie ucznia.")
     student_surname = attribute_type_check(str, "Podaj nazwisko ucznia.")
     student_class = attribute_type_check(str, "Podaj klase ucznia.")
-    Student = NewStudent(student_name, student_surname, student_class)
-    user_id += 1
-    user_list = {
-        "student": {
-            "S" + str(user_id): {
-                "name": Student.name,
-                "surname": Student.surname,
-                "class": Student.school_class
-            }
+    new_student = Student(student_name, student_surname, student_class)
+    user_list[new_student.id] = {
+        "Student": {
+            "name": new_student.name,
+            "surname": new_student.surname,
+            "class": new_student.school_class
         }
     }
 
