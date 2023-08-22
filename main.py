@@ -76,7 +76,56 @@ def create_teacher():
 
 
 def create_class_teacher():
-    print("Hello Class Teacher")
+    global user_list, user_id
+    teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
+    teacher_surname = attribute_type_check(str, "Podaj nazwisko nauczyciela.")
+    for id in user_list.items():
+        print(f"ID: {id}")
+        for user_class in id:
+            import ipdb
+            ipdb.set_trace()
+            print(f"User class: {user_class}")
+            if user_class == "Teacher":
+                name = user_list.get(id, "Teacher", "name")
+                surname = user_list.get(id, "Teacher", "surname")
+                if name == teacher_name and surname == teacher_surname:
+                    print(
+                        f"Nauczyciel obecnie w bazie. ID: {id}. Czy to ten sam użytkownik?")
+                    user_input = None
+                    while not isinstance(user_input, str):
+                        user_input = attribute_type_check(
+                            str, "TAK/NIE").upper()
+                        if user_input == "TAK":
+                            assigned_class = attribute_type_check(
+                                str, "Podaj nazwe prowadzonej klasy.")
+                            user_list[id, "Teacher",
+                                      "assigned_class"] = assigned_class
+                            print(user_list)
+                            break_lines(10)
+                        elif user_input == "NIE":
+                            user_id += 1
+                            user_list["T" + str(user_id)] = {
+                                "Teacher": {
+                                    "name": teacher_name,
+                                    "surname": teacher_surname
+                                }
+                            }
+                            print(user_list)
+                            break_lines(10)
+                        else:
+                            user_input = bad_attribute_value(user_input)
+    assigned_class = attribute_type_check(
+        str, "Podaj nazwe prowadzonej klasy.")
+    user_id += 1
+    user_list["T" + str(user_id)] = {
+        "Teacher": {
+            "name": teacher_name,
+            "surname": teacher_surname,
+            "assigned_class": assigned_class
+        }
+    }
+    print(user_list)
+    break_lines(10)
 
 
 def create_user():
@@ -101,7 +150,6 @@ def create_user():
 
 
 # MAIN MENU
-
 
 def main_menu():
     user_command = None
