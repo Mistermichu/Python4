@@ -53,6 +53,7 @@ def confirm_input(*args):
 
 
 user_class = ["uczeń", "nauczyciel", "wychowawca"]
+manage_option = ["klasa", "uczeń", "nauczyciel", "wychowawca"]
 user_list = {}
 user_id = 100
 
@@ -204,14 +205,72 @@ def create_user():
             str, "Wprowadź \"KONIEC\", aby przerwać.").upper()
         if select_class == "UCZEŃ" or select_class == "UCZEN":
             create_student()
+            select_class = None
         elif select_class == "NAUCZYCIEL":
             create_teacher()
+            select_class = None
         elif select_class == "WYCHOWAWCA":
             create_class_teacher()
+            select_class = None
         elif select_class == "KONIEC":
             break
         else:
             select_class = bad_attribute_value(select_class)
+
+
+# MANAGE USERS
+
+def manage_class():
+    global user_list
+    class_name = attribute_type_check(
+        str, "Wprowadź nazwę klasy do przeglądu: ").upper()
+    student_list = []
+    for id, user in user_list.items():
+        data = user.get("student", {})
+        student_in_class = data.get("class")
+        if student_in_class == class_name:
+            student = data.get("name") + " " + data.get("surname")
+            student_list.append(student)
+    class_teacher = "Do klasy nie jest przypisany wychowawca."
+    for id, user in user_list.items():
+        data = user.get("class_teacher", {})
+        if_class_teacher = data.get("leading_class")
+        if if_class_teacher == class_name:
+            class_teacher = data.get("name") + " " + data.get("surname")
+    break_lines(20)
+    print(f"Klasa: {class_name}")
+    print(f"Wychowawca: {class_teacher}")
+    print("Lista uczniów:")
+    for student_number, student_name_surname in enumerate(student_list):
+        print(f"{student_number + 1}.: {student_name_surname}")
+    break_lines(20)
+
+
+def manage_user():
+    select_option = None
+    while not isinstance(select_option, str):
+        break_lines(20)
+        print("Wybierz opcje do zarządzania.")
+        for option in manage_option:
+            print(option.upper())
+        select_option = attribute_type_check(
+            str, "Wprowadź \"KONIEC\", aby przerwać").upper()
+        if select_option == "KLASA":
+            manage_class()
+            select_option = None
+        elif select_option == "UCZEŃ" or select_option == "UCZEN":
+            print("Zarządzaj studentem")
+            select_option = None
+        elif select_option == "NAUCZYCIEL":
+            print("Zarządzaj nauczycielami")
+            select_option = None
+        elif select_option == "WYCHOWAWCA":
+            print("Zarządzaj wychowawcą")
+            select_option = None
+        elif select_option == "KONIEC":
+            break
+        else:
+            select_option = bad_attribute_value(select_option)
 
 
 # MAIN MENU
@@ -229,7 +288,7 @@ def main_menu():
             create_user()
             user_command = None
         elif user_command == "ZARZĄDZAJ" or user_command == "ZARZADZAJ":
-            print("Zarządzaj")
+            manage_user()
             user_command = None
         elif user_command == "KONIEC":
             print("Koniec")
