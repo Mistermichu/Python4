@@ -68,7 +68,7 @@ def check_if_user_exist(input_name, input_surname, user_class):
             surname = data.get("surname")
             if input_name == name and input_surname == surname:
                 print(
-                    f"Użytkownik {input_name} {input_surname} obecnie w bazie.")
+                    f"Użytkownik {input_name} {input_surname} obecnie w bazie w kategori {(str(user_class).upper())}.")
                 print("Czy kontunować dodawanie nowego użytkownika?")
                 continue_process = continue_request()
                 if not continue_process:
@@ -108,7 +108,6 @@ def create_student():
                         "class": student_class.upper()
                     }
                 }
-                print(user_list)
                 break_lines(10)
 
 
@@ -121,37 +120,42 @@ def create_teacher():
         teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
         teacher_surname = attribute_type_check(
             str, "Podaj nazwisko nauczyciela.")
-        teacher_subject = attribute_type_check(
-            str, "Podaj nazwe przedmiotu nauczanego.")
-        add_class = True
-        teacher_classes = []
-        print("Wprowadź klasy nauczyciela. Zostaw puste pole aby zastopować")
-        while add_class:
-            class_input = str(input("Klasa: "))
-            if len(class_input) == 0:
-                add_class = False
-            elif isinstance(class_input, str):
-                teacher_classes.append(class_input)
-            else:
-                class_input = bad_attribute_value(class_input)
-        user_confirm = confirm_input(
-            teacher_name, teacher_surname, teacher_subject, teacher_classes)
-        if not user_confirm:
-            continue_process = continue_request()
-            if not continue_process:
-                user_id -= 1
-                break
+        new_user = check_if_user_exist(
+            teacher_name, teacher_surname, new_user_class)
+        if not new_user:
+            user_id -= 1
+            break
         else:
-            user_list["T" + str(user_id)] = {
-                new_user_class: {
-                    "name": teacher_name,
-                    "surname": teacher_surname,
-                    "subject": teacher_subject,
-                    "classes": teacher_classes
+            teacher_subject = attribute_type_check(
+                str, "Podaj nazwe przedmiotu nauczanego.").upper()
+            add_class = True
+            teacher_classes = []
+            print("Wprowadź klasy nauczyciela. Zostaw puste pole aby zastopować")
+            while add_class:
+                class_input = str(input("Klasa: ")).upper()
+                if len(class_input) == 0:
+                    add_class = False
+                elif isinstance(class_input, str):
+                    teacher_classes.append(class_input)
+                else:
+                    class_input = bad_attribute_value(class_input)
+            user_confirm = confirm_input(
+                teacher_name, teacher_surname, teacher_subject, teacher_classes)
+            if not user_confirm:
+                continue_process = continue_request()
+                if not continue_process:
+                    user_id -= 1
+                    break
+            else:
+                user_list["T" + str(user_id)] = {
+                    new_user_class: {
+                        "name": teacher_name,
+                        "surname": teacher_surname,
+                        "subject": teacher_subject,
+                        "classes": teacher_classes
+                    }
                 }
-            }
-            print(user_list)
-            break_lines(10)
+                break_lines(10)
 
 
 def create_class_teacher():
@@ -163,25 +167,30 @@ def create_class_teacher():
         teacher_name = attribute_type_check(str, "Podaj imie wychowawcy.")
         teacher_surname = attribute_type_check(
             str, "Podaj nazwisko wychowawcy.")
-        leading_class = attribute_type_check(
-            str, "Podaj nazwe prowadzonej klasy.")
-        user_confirm = confirm_input(
-            teacher_name, teacher_surname, leading_class)
-        if not user_confirm:
-            continue_process = continue_request()
-            if not continue_process:
-                user_id -= 1
-                break
+        new_user = check_if_user_exist(
+            teacher_name, teacher_surname, new_user_class)
+        if not new_user:
+            user_id -= 1
+            break
         else:
-            user_list["CT" + str(user_id)] = {
-                new_user_class: {
-                    "name": teacher_name,
-                    "surname": teacher_surname,
-                    "leading_class": leading_class
+            leading_class = attribute_type_check(
+                str, "Podaj nazwe prowadzonej klasy.").upper()
+            user_confirm = confirm_input(
+                teacher_name, teacher_surname, leading_class)
+            if not user_confirm:
+                continue_process = continue_request()
+                if not continue_process:
+                    user_id -= 1
+                    break
+            else:
+                user_list["CT" + str(user_id)] = {
+                    new_user_class: {
+                        "name": teacher_name,
+                        "surname": teacher_surname,
+                        "leading_class": leading_class
+                    }
                 }
-            }
-            print(user_list)
-            break_lines(10)
+                break_lines(10)
 
 
 def create_user():
