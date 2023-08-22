@@ -21,6 +21,37 @@ def attribute_type_check(attribute_type, message):
                 user_input = bad_attribute_value(user_input)
 
 
+def continue_request():
+    print("Czy kontynować?")
+    user_confirm = False
+    while not user_confirm:
+        user_confirm = attribute_type_check(str, ">>>TAK/NIE")
+        if user_confirm == "TAK" or user_confirm == "tak":
+            return True
+        elif user_confirm == "NIE" or user_confirm == "nie":
+            return False
+        else:
+            user_confirm = bad_attribute_value(user_confirm)
+            user_confirm = False
+
+
+def confirm_input(*args):
+    user_confirm = False
+    while not user_confirm:
+        break_lines(10)
+        print("Czy podane wartości są poprawne")
+        for position, input in enumerate(args):
+            print(f"{position}.: {input}")
+        user_confirm = attribute_type_check(str, ">>>TAK/NIE<<<")
+        if user_confirm == "TAK" or user_confirm == "tak":
+            return True
+        elif user_confirm == "NIE" or user_confirm == "nie":
+            return False
+        else:
+            user_confirm = bad_attribute_value(user_confirm)
+            user_confirm = False
+
+
 user_class = ["uczeń", "nauczyciel", "wychowawca"]
 user_list = {}
 user_id = 100
@@ -31,38 +62,53 @@ user_id = 100
 def create_student():
     global user_list, user_id
     user_id += 1
-    student_name = attribute_type_check(str, "Podaj imie ucznia.")
-    student_surname = attribute_type_check(str, "Podaj nazwisko ucznia.")
-    student_class = attribute_type_check(str, "Podaj klase ucznia.")
-    user_list["S" + str(user_id)] = {
-        "Student": {
-            "name": student_name,
-            "surname": student_surname,
-            "class": student_class.upper()
-        }
-    }
-    print(user_list)
-    break_lines(10)
+    user_confirm = False
+    while not user_confirm:
+        student_name = attribute_type_check(str, "Podaj imie ucznia.")
+        student_surname = attribute_type_check(str, "Podaj nazwisko ucznia.")
+        student_class = attribute_type_check(str, "Podaj klase ucznia.")
+        user_confirm = confirm_input(
+            student_name, student_surname, student_class)
+        if not user_confirm:
+            continue_proccess = continue_request()
+            if not continue_proccess:
+                user_id -= 1
+                break
+        else:
+            user_list["S" + str(user_id)] = {
+                "Student": {
+                    "name": student_name,
+                    "surname": student_surname,
+                    "class": student_class.upper()
+                }
+            }
+            print(user_list)
+            break_lines(10)
 
 
 def create_teacher():
     global user_list, user_id
     user_id += 1
-    teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
-    teacher_surname = attribute_type_check(str, "Podaj nazwisko nauczyciela.")
-    teacher_subject = attribute_type_check(
-        str, "Podaj nazwe przedmiotu nauczanego.")
-    add_class = True
-    teacher_classes = []
-    print("Wprowadź klasy nauczyciela. Zostaw puste pole aby zastopować")
-    while add_class:
-        class_input = str(input("Klasa: "))
-        if len(class_input) == 0:
-            add_class = False
-        elif isinstance(class_input, str):
-            teacher_classes.append(class_input)
-        else:
-            class_input = bad_attribute_value(class_input)
+    user_confirm = False
+    while not user_confirm:
+        teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
+        teacher_surname = attribute_type_check(
+            str, "Podaj nazwisko nauczyciela.")
+        teacher_subject = attribute_type_check(
+            str, "Podaj nazwe przedmiotu nauczanego.")
+        add_class = True
+        teacher_classes = []
+        print("Wprowadź klasy nauczyciela. Zostaw puste pole aby zastopować")
+        while add_class:
+            class_input = str(input("Klasa: "))
+            if len(class_input) == 0:
+                add_class = False
+            elif isinstance(class_input, str):
+                teacher_classes.append(class_input)
+            else:
+                class_input = bad_attribute_value(class_input)
+        user_confirm = confirm_input(
+            teacher_name, teacher_surname, teacher_subject, teacher_classes)
     user_list["T" + str(user_id)] = {
         "Teacher": {
             "name": teacher_name,
@@ -79,51 +125,20 @@ def create_class_teacher():
     global user_list, user_id
     teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
     teacher_surname = attribute_type_check(str, "Podaj nazwisko nauczyciela.")
-    for id in user_list.items():
-        print(f"ID: {id}")
-        for user_class in id:
-            import ipdb
-            ipdb.set_trace()
-            print(f"User class: {user_class}")
-            if user_class == "Teacher":
-                name = user_list.get(id, "Teacher", "name")
-                surname = user_list.get(id, "Teacher", "surname")
-                if name == teacher_name and surname == teacher_surname:
-                    print(
-                        f"Nauczyciel obecnie w bazie. ID: {id}. Czy to ten sam użytkownik?")
-                    user_input = None
-                    while not isinstance(user_input, str):
-                        user_input = attribute_type_check(
-                            str, "TAK/NIE").upper()
-                        if user_input == "TAK":
-                            assigned_class = attribute_type_check(
-                                str, "Podaj nazwe prowadzonej klasy.")
-                            user_list[id, "Teacher",
-                                      "assigned_class"] = assigned_class
-                            print(user_list)
-                            break_lines(10)
-                        elif user_input == "NIE":
-                            user_id += 1
-                            user_list["T" + str(user_id)] = {
-                                "Teacher": {
-                                    "name": teacher_name,
-                                    "surname": teacher_surname
-                                }
-                            }
-                            print(user_list)
-                            break_lines(10)
-                        else:
-                            user_input = bad_attribute_value(user_input)
     assigned_class = attribute_type_check(
         str, "Podaj nazwe prowadzonej klasy.")
     user_id += 1
-    user_list["T" + str(user_id)] = {
+    user_list["CT" + str(user_id)] = {
         "Teacher": {
             "name": teacher_name,
             "surname": teacher_surname,
             "assigned_class": assigned_class
         }
     }
+    for id, user in user_list.items():
+        if id.startswith("CT"):
+            print(id)
+            print(user)
     print(user_list)
     break_lines(10)
 
