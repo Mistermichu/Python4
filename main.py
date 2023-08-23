@@ -70,7 +70,6 @@ def check_if_user_exist(input_name, input_surname, user_class):
             if input_name == name and input_surname == surname:
                 print(
                     f"Użytkownik {input_name} {input_surname} obecnie w bazie w kategori {(str(user_class).upper())}.")
-                print("Czy kontunować dodawanie nowego użytkownika?")
                 continue_process = continue_request()
                 if not continue_process:
                     return False
@@ -85,8 +84,9 @@ def create_student():
     new_user_class = "student"
     user_confirm = False
     while not user_confirm:
-        student_name = attribute_type_check(str, "Podaj imie ucznia.")
-        student_surname = attribute_type_check(str, "Podaj nazwisko ucznia.")
+        student_name = attribute_type_check(str, "Podaj imie ucznia.").upper()
+        student_surname = attribute_type_check(
+            str, "Podaj nazwisko ucznia.").upper()
         new_user = check_if_user_exist(
             student_name, student_surname, new_user_class)
         if not new_user:
@@ -118,9 +118,10 @@ def create_teacher():
     new_user_class = "teacher"
     user_confirm = False
     while not user_confirm:
-        teacher_name = attribute_type_check(str, "Podaj imie nauczyciela.")
+        teacher_name = attribute_type_check(
+            str, "Podaj imie nauczyciela.").upper()
         teacher_surname = attribute_type_check(
-            str, "Podaj nazwisko nauczyciela.")
+            str, "Podaj nazwisko nauczyciela.").upper()
         new_user = check_if_user_exist(
             teacher_name, teacher_surname, new_user_class)
         if not new_user:
@@ -165,9 +166,10 @@ def create_class_teacher():
     new_user_class = "class_teacher"
     user_confirm = False
     while not user_confirm:
-        teacher_name = attribute_type_check(str, "Podaj imie wychowawcy.")
+        teacher_name = attribute_type_check(
+            str, "Podaj imie wychowawcy.").upper()
         teacher_surname = attribute_type_check(
-            str, "Podaj nazwisko wychowawcy.")
+            str, "Podaj nazwisko wychowawcy.").upper()
         new_user = check_if_user_exist(
             teacher_name, teacher_surname, new_user_class)
         if not new_user:
@@ -246,6 +248,33 @@ def manage_class():
     break_lines(20)
 
 
+def manage_student():
+    global user_list
+    name = attribute_type_check(str, "Wprowadź imię ucznia: ").upper()
+    surname = attribute_type_check(str, "Wprowadź nazwisko ucznia: ").upper()
+    if len(user_list) == 0:
+        print("Brak użytkowników w bazie")
+    else:
+        user_name = None
+        user_surname = None
+        for id, user in user_list.items():
+            print(user)
+            if "student" not in user:
+                continue
+            else:
+                user_name = user.get("name")
+                user_surname = user.get("surname")
+                if name == user_name and surname == user_surname:
+                    student_in_class = user.get("class")
+                    print("Jest taki uczeń")
+                else:
+                    user_name = None
+                    user_surname = None
+                    continue
+        if user_name == None and user_surname == None:
+            print(f"Nie znaleziono ucznia: {name} {surname}")
+
+
 def manage_user():
     select_option = None
     while not isinstance(select_option, str):
@@ -259,7 +288,7 @@ def manage_user():
             manage_class()
             select_option = None
         elif select_option == "UCZEŃ" or select_option == "UCZEN":
-            print("Zarządzaj studentem")
+            manage_student()
             select_option = None
         elif select_option == "NAUCZYCIEL":
             print("Zarządzaj nauczycielami")
