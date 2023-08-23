@@ -1,4 +1,13 @@
+# GLOBALS
+
+user_class = ["uczeń", "nauczyciel", "wychowawca"]
+manage_option = ["klasa", "uczeń", "nauczyciel", "wychowawca"]
+user_list = {}
+user_id = 100
+
 # REPETITIVE FUNCTIONS
+
+
 def break_lines(quantity):
     print("*" * quantity)
 
@@ -52,10 +61,39 @@ def confirm_input(*args):
             user_confirm = False
 
 
-user_class = ["uczeń", "nauczyciel", "wychowawca"]
-manage_option = ["klasa", "uczeń", "nauczyciel", "wychowawca"]
-user_list = {}
-user_id = 100
+def get_student_data(id):
+    global user_list
+    user_data = user_list[id].get("student", {})
+    name = user_data.get("name")
+    surname = user_data.get("surname")
+    class_room = user_data.get("class")
+    teacher_subject = []
+    for id, user in user_list.items():
+        teacher = None
+        subject = None
+        if "teacher" in user:
+            teacher_class = user["teacher"].get("classes")
+            if class_room in teacher_class:
+                teacher_name = user["teacher"].get("name")
+                teacher_surname = user["teacher"].get("surname")
+                teacher = teacher_name + " " + teacher_surname
+                subject = user["teacher"].get("subject")
+                combined_data = [teacher, subject]
+                teacher_subject.append(combined_data)
+                continue
+    if len(teacher_subject) == 0:
+        print(f"Uczeń {name} {surname}")
+        print("Brak danych dotyczących przypisanych przedmiotów i nauczycieli.")
+    else:
+        break_lines(20)
+        print(f"Uczeń {name} {surname}")
+        break_lines(5)
+        print("***NAUCZYCIEL / PRZEDMIOT***")
+        for number, teacher_and_subject in enumerate(teacher_subject):
+            teacher_name = teacher_and_subject[0]
+            subject = teacher_and_subject[1]
+            print(f"{number + 1}.: {teacher_name} - {subject}")
+
 
 # CREATE USER
 
@@ -258,15 +296,14 @@ def manage_student():
         user_name = None
         user_surname = None
         for id, user in user_list.items():
-            print(user)
             if "student" not in user:
                 continue
             else:
                 user_name = user["student"].get("name")
                 user_surname = user["student"].get("surname")
                 if name == user_name and surname == user_surname:
-                    student_in_class = user.get("class")
-                    print("Jest taki uczeń")
+                    get_student_data(id)
+                    break
                 else:
                     user_name = None
                     user_surname = None
@@ -318,6 +355,10 @@ def main_menu():
             user_command = None
         elif user_command == "ZARZĄDZAJ" or user_command == "ZARZADZAJ":
             manage_user()
+            user_command = None
+        elif user_command == "PRINT_USERS":
+            for user in user_list.items():
+                print(user)
             user_command = None
         elif user_command == "KONIEC":
             print("Koniec")
