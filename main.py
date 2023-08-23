@@ -93,6 +93,7 @@ def get_student_data(id):
             teacher_name = teacher_and_subject[0]
             subject = teacher_and_subject[1]
             print(f"{number + 1}.: {teacher_name} - {subject}")
+        break_lines(20)
 
 
 # CREATE USER
@@ -310,6 +311,38 @@ def manage_student():
                     continue
         if user_name == None and user_surname == None:
             print(f"Nie znaleziono ucznia: {name} {surname}")
+
+
+def menage_teacher():
+    global user_list
+    name = attribute_type_check(str, "Wprowadź imię nauczyciela: ").upper()
+    surname = attribute_type_check(
+        str, "Wprowadź nazwisko nauczyciela: ").upper()
+    if len(user_list) == 0:
+        print("Brak użytkowników w bazie")
+    else:
+        user_name = None
+        user_surnam = None
+        for id, user in user_list.items():
+            if "teacher" not in user:
+                continue
+            else:
+                user_name = user["teacher"].get("name")
+                user_surname = user["teacher"].get("surname")
+                if name == user_name and surname == user_surname:
+                    teacher_classes = user["teacher"].get("classes")
+                    subject = user["teacher"]. get("subject")
+                    print(f"Nauczyciel: {name} {surname}")
+                    print(f"Przedmiot: {subject}")
+                    print(f"Klasy: {teacher_classes}")
+                    break_lines(20)
+                    break
+                else:
+                    user_name = None
+                    user_surname = None
+                    continue
+        if user_name == None and user_surname == None:
+            print(f"Nie znaleziono nauczyciela: {name} {surname}")
 
 
 def manage_user():
