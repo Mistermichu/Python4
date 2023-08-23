@@ -294,6 +294,33 @@ def manage_class():
     break_lines(20)
 
 
+def manage_class_teacher():
+    global user_list
+    name = attribute_type_check(str, "Wprowadź imię wychowawcy: ").upper()
+    surname = attribute_type_check(
+        str, "Wprowadź nazwisko wychowawcy: ").upper()
+    if len(user_list) == 0:
+        print("Brak użytkowników w bazie")
+    else:
+        user_name = None
+        user_surname = None
+        for id, user in user_list.item():
+            if "class_teacher" not in user:
+                continue
+            else:
+                user_name = user["class_teacher"].get("name")
+                user_surname = user["class_teacher"].get("surname")
+                if name == user_name and surname == user_surname:
+                    leading_class = user["class_teacher"].get("leading_class")
+
+                else:
+                    user_name = None
+                    user_surname = None
+                    continue
+        if user_name == None and user_surname == None:
+            print(f"Nie znaleziono wychowawcy: {name} {surname}")
+
+
 def manage_student():
     global user_list
     name = attribute_type_check(str, "Wprowadź imię ucznia: ").upper()
