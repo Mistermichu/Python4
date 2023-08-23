@@ -1,3 +1,10 @@
+'''
+Additional functions in main menu:
+print_users - print all users
+delete_user - delete user
+'''
+
+
 # GLOBALS
 
 user_class = ["uczeń", "nauczyciel", "wychowawca"]
@@ -313,7 +320,7 @@ def manage_student():
             print(f"Nie znaleziono ucznia: {name} {surname}")
 
 
-def menage_teacher():
+def manage_teacher():
     global user_list
     name = attribute_type_check(str, "Wprowadź imię nauczyciela: ").upper()
     surname = attribute_type_check(
@@ -332,6 +339,7 @@ def menage_teacher():
                 if name == user_name and surname == user_surname:
                     teacher_classes = user["teacher"].get("classes")
                     subject = user["teacher"]. get("subject")
+                    break_lines(20)
                     print(f"Nauczyciel: {name} {surname}")
                     print(f"Przedmiot: {subject}")
                     print(f"Klasy: {teacher_classes}")
@@ -361,7 +369,7 @@ def manage_user():
             manage_student()
             select_option = None
         elif select_option == "NAUCZYCIEL":
-            print("Zarządzaj nauczycielami")
+            manage_teacher()
             select_option = None
         elif select_option == "WYCHOWAWCA":
             print("Zarządzaj wychowawcą")
@@ -375,6 +383,7 @@ def manage_user():
 # MAIN MENU
 
 def main_menu():
+    global user_list
     user_command = None
     while not isinstance(user_command, str):
         break_lines(40)
@@ -393,6 +402,19 @@ def main_menu():
             for user in user_list.items():
                 print(user)
             user_command = None
+        elif user_command == "DELETE_USER":
+            del_id = str(input("ID: ")).upper()
+            if del_id in user_list:
+                confirm_delete = continue_request()
+                if confirm_delete:
+                    del user_list[del_id]
+                    print(f"User: {del_id} has been deleted from the system.")
+                    user_command = None
+                else:
+                    user_command = None
+            else:
+                print(f"ID: {del_id} not found")
+                user_command = None
         elif user_command == "KONIEC":
             print("Koniec")
         else:
