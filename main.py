@@ -184,7 +184,10 @@ def create_teacher():
                 if len(class_input) == 0:
                     add_class = False
                 elif isinstance(class_input, str):
-                    teacher_classes.append(class_input)
+                    if class_input in teacher_classes:
+                        print("***Klasa była już dodana. Spróbuj ponownie")
+                    else:
+                        teacher_classes.append(class_input)
                 else:
                     class_input = bad_attribute_value(class_input)
             user_confirm = confirm_input(
