@@ -262,8 +262,8 @@ def manage_student():
             if "student" not in user:
                 continue
             else:
-                user_name = user.get("name")
-                user_surname = user.get("surname")
+                user_name = user["student"].get("name")
+                user_surname = user["student"].get("surname")
                 if name == user_name and surname == user_surname:
                     student_in_class = user.get("class")
                     print("Jest taki uczeń")
