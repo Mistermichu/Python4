@@ -268,10 +268,7 @@ def create_user():
 
 # MANAGE USERS
 
-def manage_class():
-    global user_list
-    class_name = attribute_type_check(
-        str, "Wprowadź nazwę klasy do przeglądu: ").upper()
+def manage_class_additional(class_name):
     student_list = []
     for id, user in user_list.items():
         data = user.get("student", {})
@@ -294,6 +291,13 @@ def manage_class():
     break_lines(20)
 
 
+def manage_class():
+    global user_list
+    class_name = attribute_type_check(
+        str, "Wprowadź nazwę klasy do przeglądu: ").upper()
+    manage_class_additional(class_name)
+
+
 def manage_class_teacher():
     global user_list
     name = attribute_type_check(str, "Wprowadź imię wychowawcy: ").upper()
@@ -304,7 +308,7 @@ def manage_class_teacher():
     else:
         user_name = None
         user_surname = None
-        for id, user in user_list.item():
+        for id, user in user_list.items():
             if "class_teacher" not in user:
                 continue
             else:
@@ -312,7 +316,7 @@ def manage_class_teacher():
                 user_surname = user["class_teacher"].get("surname")
                 if name == user_name and surname == user_surname:
                     leading_class = user["class_teacher"].get("leading_class")
-
+                    manage_class_additional(leading_class)
                 else:
                     user_name = None
                     user_surname = None
@@ -399,7 +403,7 @@ def manage_user():
             manage_teacher()
             select_option = None
         elif select_option == "WYCHOWAWCA":
-            print("Zarządzaj wychowawcą")
+            manage_class_teacher()
             select_option = None
         elif select_option == "KONIEC":
             break
